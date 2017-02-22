@@ -8,7 +8,7 @@ stat: expr '=' expr ';'
 	;
 expr: expr '*' expr 			// production 1
 	| expr '+' expr 			// production 2
-	| expr '^'<assoc=right> expr 	// production 3
+	|<assoc=right> expr '^' expr 	// production 3
 	| expr '(' expr ')' 		// f(x)
 	| id
 	| num

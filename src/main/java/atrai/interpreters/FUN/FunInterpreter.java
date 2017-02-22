@@ -14,45 +14,6 @@ import static atrai.interpreters.common.DynamicTypeChecker.*;
 import static atrai.interpreters.common.DynamicTypeChecker.i;
 import static atrai.interpreters.common.DynamicTypeChecker.s;
 
-class NullValue {
-    public final static NullValue instance = new NullValue();
-
-    @Override
-    public String toString() {
-        return "null";
-    }
-}
-
-/**
- * Stores a lambda (a triple of bound variables, a body, and the environment it was created in)
- *
- * @author Koushik Sen
- * @author Alex Reinking
- */
-class Lambda {
-    final String boundVar;
-    final InternalNode body;
-    final Environment env;
-
-    public Lambda(String boundVar, InternalNode body, Environment env) {
-        this.boundVar = boundVar;
-        this.body = body;
-        this.env = env;
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(env);
-        sb.append(" fun (");
-        if (boundVar != null) {
-            sb.append(boundVar);
-        }
-        sb.append(") ").append(body);
-        return sb.toString();
-    }
-}
-//endregion
 
 /**
  * FunInterpreter for the FUN language
