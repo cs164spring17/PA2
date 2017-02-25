@@ -4,6 +4,7 @@ import atrai.core.UntypedTree;
 import atrai.core.TreeBuilder;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.misc.Interval;
+import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.RuleNode;
 import org.antlr.v4.runtime.tree.TerminalNodeImpl;
@@ -21,6 +22,19 @@ import java.util.List;
  * @author Koushik Sen
  * @author Alex Reinking
  */
+
+class ThrowingErrorListener extends BaseErrorListener {
+
+    public static final ThrowingErrorListener INSTANCE = new ThrowingErrorListener();
+
+    @Override
+    public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine, String msg, RecognitionException e)
+            throws ParseCancellationException {
+        System.err.println("Syntax Error: at line " + line + ":" + charPositionInLine + " " + msg);
+        throw new ParseCancellationException("line " + line + ":" + charPositionInLine + " " + msg);
+    }
+}
+
 public class GenericAntlrToUntypedTree {
     private List<String> ruleNames = null;
     private List<String> tokenNames = null;
@@ -61,6 +75,8 @@ public class GenericAntlrToUntypedTree {
         Constructor cons = classDefinition.getConstructor(type);
         obj = new Object[]{inputStream};
         Lexer lexer = (Lexer) cons.newInstance(obj);
+        lexer.removeErrorListeners();
+        lexer.addErrorListener(ThrowingErrorListener.INSTANCE);
         tokens = new CommonTokenStream(lexer);
 
         type = new Class[]{TokenStream.class};
@@ -68,6 +84,8 @@ public class GenericAntlrToUntypedTree {
         cons = classDefinition.getConstructor(type);
         obj = new Object[]{tokens};
         Parser parser = (Parser) cons.newInstance(obj);
+        parser.removeErrorListeners();
+        parser.addErrorListener(ThrowingErrorListener.INSTANCE);
 
         Method method = parser.getClass().getMethod(startSymbol);
         ParserRuleContext t = (ParserRuleContext) method.invoke(parser);

@@ -20,6 +20,8 @@ import static atrai.interpreters.common.DynamicTypeChecker.*;
  * @author Alex Reinking
  */
 public class LetrecInterpreter extends Interpreter {
+    private final static boolean DEBUG3 = Boolean.getBoolean("debug3");
+
 
     private String grammarName = "atrai.antlr.LETREC";
 

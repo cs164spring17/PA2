@@ -91,7 +91,14 @@ public class LetInterpreter extends Interpreter {
         });
         transformer.addTransformer("(%LET @_ iden @_%)", (c, E) -> {
             Location l = st.getLocationFromID((Integer) c[1]);
-            return e(E).get(s(transformer.transform(c[2], E), l));
+            if (E == null) {
+                throw new SemanticException(c[2]+" is not defined.", l);
+            }
+            Object ret = e(E).get(s(transformer.transform(c[2], E), l));
+            if (ret == null) {
+                throw new SemanticException(c[2]+" is not defined.", l);
+            }
+            return ret;
         });
         transformer.addTransformer("(%LET @_ expr let (%LET @_ iden @_%) = @_ in @_%)", (c, E) -> {
             Location l = st.getLocationFromID((Integer) c[1]);
