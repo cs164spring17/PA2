@@ -102,7 +102,7 @@ public class LetInterpreter extends Interpreter {
         });
         transformer.addTransformer("(%LET @_ expr let (%LET @_ iden @_%) = @_ in @_%)", (c, E) -> {
             Location l = st.getLocationFromID((Integer) c[1]);
-            Environment Ep = Environment.extend(s(c[3], l), i(transformer.transform(c[4], E), l), e(E));
+            Environment Ep = Environment.extend(s(c[3], l), transformer.transform(c[4], E), e(E));
             return transformer.transform(c[5], Ep);
         });
         transformer.addTransformer("(%LET @_ expr if @_ then @_ else @_%)", (c, E) -> {
